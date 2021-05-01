@@ -9,22 +9,21 @@ import java.util.Date;
 
 @Entity
 @Data
-@Table(name = "hospede")
+@Table(name="reserva")
 @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
-public class Hospede {
+public class Reserva {
 
     @Id
     @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
-    @SequenceGenerator(name="hospede_id_seq")
+    @SequenceGenerator(name="reserva_id_seq")
     private int id;
 
-    private String nome;
+    private Date checkin;
 
-    private Date dataNascimento;
+    private Date checkout;
 
-    private long telefone;
+    private long cpfHospede;
 
-    private long cpf;
+    private boolean garagem;
 
-    private boolean ativo;
 }

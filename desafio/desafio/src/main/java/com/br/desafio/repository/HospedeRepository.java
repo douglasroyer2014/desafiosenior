@@ -9,11 +9,8 @@ public interface HospedeRepository extends CrudRepository<Hospede, Integer> {
 
     List<Hospede> findByAtivo(boolean ativo);
 
-    Hospede findById(int id);
-
     Hospede findByCpf(long cpf);
 
     <tipHospede extends Hospede> tipHospede save(tipHospede hospede);
-
 
 }
