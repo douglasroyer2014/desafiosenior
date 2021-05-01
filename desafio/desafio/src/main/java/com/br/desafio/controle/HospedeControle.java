@@ -23,7 +23,7 @@ public class HospedeControle {
 
     @PostMapping
     public ResponseEntity<Hospede> cadastrar(@RequestBody Hospede hospede){
-        return new ResponseEntity<Hospede>(hospedeDao.cadastrar(hospede), HttpStatus.CREATED);
+        return hospedeDao.cadastrar(hospede);
     }
 
     @GetMapping("/{cpf}")
