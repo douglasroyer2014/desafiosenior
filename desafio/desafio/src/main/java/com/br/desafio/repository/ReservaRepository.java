@@ -15,6 +15,8 @@ public interface ReservaRepository extends CrudRepository<Reserva, Integer> {
 
     List<Reserva> findAll();
 
+    Reserva findById(int id);
+
     List<Reserva> findByCpfHospede(long cpfHospede);
 
     <tipReserva extends Reserva> tipReserva save(tipReserva reserva);

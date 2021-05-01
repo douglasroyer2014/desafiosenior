@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/reserva")
@@ -17,13 +17,13 @@ public class ReservaControle {
     ReservaDao reservaDao;
 
     @GetMapping("/{cpf}")
-    public @ResponseBody List<Reserva> listar(@PathVariable Long cpf){
+    public ResponseEntity listar(@PathVariable Long cpf){
         return reservaDao.listarCpf(cpf);
     }
 
     @PostMapping("/checkin")
     public ResponseEntity cadastrar(@RequestBody Reserva reserva){
-        return new ResponseEntity(reservaDao.checkin(reserva), HttpStatus.CREATED);
+        return new ResponseEntity(reservaDao.salvarReserva(reserva), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -36,14 +36,19 @@ public class ReservaControle {
         return reservaDao.removerCheckin(reserva);
     }
 
-    @PutMapping("/checkin")
-    public ResponseEntity alterarReserva(@RequestBody Reserva reserva){
-        return reservaDao.alterarCheckin(reserva);
+    @PutMapping("/checkin/{id}")
+    public ResponseEntity alterarReserva(@RequestBody Reserva reserva, @PathVariable Integer id){
+        return reservaDao.alterarCheckin(reserva, id);
     }
 
-    @PostMapping("/checkout")
+    @PutMapping("/checkout")
     public ResponseEntity realizarCheckout(@RequestBody Reserva reserva){
         return reservaDao.checkout(reserva);
+    }
+
+    @DeleteMapping("/checkout")
+    public ResponseEntity removerCheckout(@RequestBody Reserva reserva){
+        return reservaDao.removerCheckout(reserva);
     }
 
 }
