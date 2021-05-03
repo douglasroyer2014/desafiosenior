@@ -1,7 +1,6 @@
 package com.br.desafio;
 
 import com.br.desafio.entity.Hospede;
-import com.br.desafio.service.HospedeDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.junit.runner.RunWith;
@@ -21,7 +20,7 @@ import static junit.framework.TestCase.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = DesafioApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class DesafioApplicationTests {
+class HospedeTests {
 
 	@Autowired
 	private TestRestTemplate rest;
@@ -40,12 +39,13 @@ class DesafioApplicationTests {
 		assertEquals(hospede.getCpf(), hospede2.getCpf());
 		assertEquals(hospede.getDataNascimento(), hospede2.getDataNascimento());
 		assertEquals(hospede.getNome(), hospede2.getNome());
+		rest.delete("/hospede/"+hospede2.getId());
 	}
 
 	@Test
 	void Teste02() {
 		Date dataNascimento = this.criarUmaData(10,10,1995,0,0);
-		Hospede hospede = this.criaNovoHospede(110455,"Janio", 4799,dataNascimento);
+		Hospede hospede = this.criaNovoHospede(32121,"Janio", 4799,dataNascimento);
 
 		ResponseEntity response = rest.postForEntity("/hospede", hospede, null);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -61,22 +61,29 @@ class DesafioApplicationTests {
 
 		assertEquals(2, rest.exchange("/hospede", HttpMethod.GET, null,
 				new ParameterizedTypeReference<List<Hospede>>() {}).getBody().size());
-
+		rest.delete("/hospede/"+hospede.getId());
+		rest.delete("/hospede/"+hospede2.getId());
 	}
 
 	@Test
 	void Teste03() {
 
 		Date dataNascimento = this.criarUmaData(05,01,2001,0,0);
-		Hospede hospede = this.criaNovoHospede(852,"Alan",9952,dataNascimento);
+		Hospede hospede = this.criaNovoHospede(110,"Alan",9952,dataNascimento);
 
 		ResponseEntity response = rest.postForEntity("/hospede", hospede, null);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+		hospede = (Hospede) response.getBody();
+		hospede = rest.getForEntity("/hospede/110", Hospede.class).getBody();
 
-		rest.delete("/hospede/1");
+		rest.delete("/hospede/"+ hospede.getId());
 
-		assertEquals(0, rest.exchange("/hospede", HttpMethod.GET, null,
-				new ParameterizedTypeReference<List<Hospede>>() {}).getBody().size());
+		Hospede hospede2 = rest.getForEntity("/hospede/110", Hospede.class).getBody();
+
+		assertEquals(hospede2.getTelefone(), hospede.getTelefone());
+		assertEquals(hospede2.getNome(), hospede.getNome());
+		assertEquals(hospede2.getCpf(), hospede.getCpf());
+		assertEquals(hospede2.isAtivo(), false);
 	}
 
 	@Test
@@ -97,6 +104,7 @@ class DesafioApplicationTests {
 		assertEquals(hospede.getCpf(), hospede2.getCpf());
 		assertEquals(hospede.getNome(), hospede2.getNome());
 		assertEquals(hospede.getTelefone(), hospede2.getTelefone());
+		rest.delete("/hospede/"+hospede2.getId());
 
 	}
 
